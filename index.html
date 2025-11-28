@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Convenience Store</title>
+    <script src="https://js.stripe.com/v3/"></script> <!-- Load Stripe.js -->
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .product { border: 1px solid #ddd; padding: 10px; margin: 10px; width: 200px; float: left; }
+        .product button { background: #4CAF50; color: white; border: none; padding: 5px; cursor: pointer; }
+        #cart { clear: both; margin-top: 20px; }
+        #cart-items { list-style: none; padding: 0; }
+        #checkout-btn { background: #007BFF; color: white; padding: 10px; border: none; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>Welcome to QuickMart Convenience Store</h1>
+    <p>Browse our products and add to your cart. Pay online and pick up in store!</p>
+
+    <div id="products">
+        <!-- Products same as before -->
+        <div class="product">
+            <h3>Apple</h3>
+            <p>Price: $0.99</p>
+            <button onclick="addToCart('Apple', 0.99)">Add to Cart</button>
+        </div>
+        <div class="product">
+            <h3>Banana</h3>
+            <p>Price: $0.59</p>
+            <button onclick="addToCart('Banana', 0.59)">Add to Cart</button>
+        </div>
+        <div class="product">
+            <h3>Bottled Water</h3>
+            <p>Price: $1.49</p>
+            <button onclick="addToCart('Bottled Water', 1.49)">Add to Cart</button>
+        </div>
+        <div class="product">
+            <h3>Orange Juice</h3>
+            <p>Price: $2.99</p>
+            <button onclick="addToCart('Orange Juice', 2.99)">Add to Cart</button>
+        </div>
+        <div class="product">
+            <h3>Sandwich</h3>
+            <p>Price: $3.99</p>
+            <button onclick="addToCart('Sandwich', 3.99)">Add to Cart</button>
+        </div>
+        <div class="product">
+            <h3>Cookies</h3>
+            <p>Price: $2.49</p>
+            <button onclick="addToCart('Cookies', 2.49)">Add to Cart</button>
+        </div>
+        <div class="product">
+            <h3>Chocolate Bar</h3>
+            <p>Price: $1.29</p>
+            <button onclick="addToCart('Chocolate Bar', 1.29)">Add to Cart</button>
+        </div>
+        <div class="product">
+            <h3>Coffee</h3>
+            <p>Price: $1.99</p>
+            <button onclick="addToCart('Coffee', 1.99)">Add to Cart</button>
+        </div>
+        <div class="product">
+            <h3>Tea</h3>
+            <p>Price: $1.79</p>
+            <button onclick="addToCart('Tea', 1.79)">Add to Cart</button>
+        </div>
+        <div class="product">
+            <h3>Magazine</h3>
+            <p>Price: $4.99</p>
+            <button onclick="addToCart('Magazine', 4.99)">Add to Cart</button>
+        </div>
+    </div>
+
+    <div id="cart">
+        <h2>Your Cart</h2>
+        <ul id="cart-items"></ul>
+        <p>Total: $<span id="total">0.00</span></p>
+        <button id="checkout-btn" onclick="checkout()">Checkout with Stripe</button>
+    </div>
+
+    <script>
+        const stripe = Stripe('pk_test_51SYN9gGkkyObvo5M8DQK26nPXXYW63RrJJXPiw2wRPemPjn6e0774N2R2HGR1iFhC6NHls7pmr1ZzrBbAHkfYv9u00XeCfg4F1'); // Replace with your publishable key
+        let cart = [];
+        let total = 0;
+
+        function addToCart(name, price) {
+            cart.push({name, price});
+            total += price;
+            updateCart();
+        }
+
+        function updateCart() {
+            const cartItems = document.getElementById('cart-items');
+            cartItems.innerHTML = '';
+            cart.forEach(item => {
+                const li = document.createElement('li');
+                li.textContent = `${item.name} - $${item.price.toFixed(2)}`;
+                cartItems.appendChild(li);
+            });
+            document.getElementById('total').textContent = total.toFixed(2);
+        }
+
+        async function checkout() {
+            if (cart.length === 0) {
+                alert('Your cart is empty!');
+                return;
+            }
+
+            try {
+                // Send cart to server to create session
+                const response = await fetch('http://localhost:3000/create-checkout-session', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ items: cart })
+                });
+                const { id } = await response.json();
+
+                // Redirect to Stripe Checkout
+                const { error } = await stripe.redirectToCheckout({ sessionId: id });
+                if (error) alert(error.message);
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        }
+    </script>
+</body>
+</html>
