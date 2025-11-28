@@ -1,19 +1,13 @@
 {
-  "name": "vape-shop",
+  "name": "main-variety-plus",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "private": true,
+  "description": "QuickMart convenience store demo with Stripe Checkout",
+   "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
   "dependencies": {
-    "cors": "^2.8.5",
-    "dotenv": "^17.2.3",
-    "express": "^5.1.0",
     "stripe": "^20.0.0"
   }
 }
