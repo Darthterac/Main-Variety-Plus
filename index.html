@@ -19,7 +19,6 @@
     <p>Browse our products and add to your cart. Pay online and pick up in store!</p>
 
     <div id="products">
-        <!-- Products same as before -->
         <div class="product">
             <h3>Apple</h3>
             <p>Price: $0.99</p>
@@ -80,12 +79,14 @@
     </div>
 
     <script>
-        const stripe = Stripe('pk_test_51SYN9gGkkyObvo5M8DQK26nPXXYW63RrJJXPiw2wRPemPjn6e0774N2R2HGR1iFhC6NHls7pmr1ZzrBbAHkfYv9u00XeCfg4F1'); // Replace with your publishable key
+        // Use your Stripe *publishable* key (test mode is fine here)
+        const stripe = Stripe('pk_test_51SYN9gGkkyObvo5M8DQK26nPXXYW63RrJJXPiw2wRPemPjn6e0774N2R2HGR1iFhC6NHls7pmr1ZzrBbAHkfYv9u00XeCfg4F1');
+
         let cart = [];
         let total = 0;
 
         function addToCart(name, price) {
-            cart.push({name, price});
+            cart.push({ name, price });
             total += price;
             updateCart();
         }
@@ -108,12 +109,18 @@
             }
 
             try {
-                // Send cart to server to create session
-                const response = await fetch('http://localhost:3000/create-checkout-session', {
+                // Send cart to serverless function on Vercel
+                const response = await fetch('/api/create-checkout-session', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ items: cart })
                 });
+
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({}));
+                    throw new Error(errorData.error || 'Failed to create checkout session');
+                }
+
                 const { id } = await response.json();
 
                 // Redirect to Stripe Checkout
@@ -121,6 +128,7 @@
                 if (error) alert(error.message);
             } catch (error) {
                 alert('Error: ' + error.message);
+                console.error(error);
             }
         }
     </script>
