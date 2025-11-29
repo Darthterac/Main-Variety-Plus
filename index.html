@@ -7,6 +7,7 @@
     <script src="https://js.stripe.com/v3/"></script> <!-- Load Stripe.js -->
     <style>
         body { font-family: Arial, sans-serif; margin: 20px; }
+        img.product { width: 100%; height: auto; }
         .product { border: 1px solid #ddd; padding: 10px; margin: 10px; width: 200px; float: left; }
         .product button { background: #4CAF50; color: white; border: none; padding: 5px; cursor: pointer; }
         #cart { clear: both; margin-top: 20px; }
@@ -21,6 +22,7 @@
     <div id="products">
         <div class="product">
             <h3>Apple</h3>
+            <img class="product" src="../img/apple.png">
             <p>Price: $0.99</p>
             <button onclick="addToCart('Apple', 0.99)">Add to Cart</button>
         </div>
