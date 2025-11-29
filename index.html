@@ -12,6 +12,45 @@
             margin: 20px;
         }
 
+
+        /* Age verification overlay */
+        #age-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        #age-overlay h2 {
+            margin-bottom: 20px;
+        }
+
+        #age-overlay button {
+            margin: 10px;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        #age-yes {
+            background: #4CAF50;
+            color: white;
+        }
+
+        #age-no {
+            background: #f44336;
+            color: white;
+        }
+
         /*.product { border: 1px solid #ddd; padding: 10px; margin: 10px; width: 200px; float: left; }
         .product img { width: 48px; height: auto; }
         */
@@ -22,9 +61,9 @@
             background-color: #694696;
             border: 5px solid #c0b40a;
             border-radius: 5px;
-            margin: 10px; 
+            margin: 10px;
             margin-bottom: 10px;
-            width: 180px; 
+            width: 180px;
             float: left;
         }
 
@@ -56,6 +95,21 @@
             box-shadow: 0 2px 5px rgb(182, 84, 38);
         }
 
+        .warning img {
+            width: 100%;
+            /* Or a fixed width like 300px */
+            height: auto;
+            /* Maintain aspect ratio */
+            max-width: 400px;
+            /* Prevent image from getting too large */
+            display: block;
+            /* Remove extra space below image */
+            margin: 0 auto 20px auto;
+            /* Center image and add bottom margin */
+            border: 5px solid #e60c0c;
+            border-radius: 5px;
+        }
+
         .product button {
             background: #4CAF50;
             color: white;
@@ -85,58 +139,82 @@
 </head>
 
 <body>
-    <h1>Welcome to QuickMart Convenience Store</h1>
-    <p>Browse our products and add to your cart. Pay online and pick up in store!</p>
+    <!-- Age verification overlay -->
+    <div id="age-overlay">
+        <h2>You must be 19 years or older to enter</h2>
+        <div>
+            <button id="age-yes">Yes, I am 19+</button>
+            <button id="age-no">No</button>
+        </div>
+    </div>
+
+    <h1>Main Vape Plus</h1>
+    <p>Browse our products and add to your cart. Pay online and pick up in store!</p><br>
+
+    <div id="warnings">
+        <div class="warning">
+            <img src="../img/warning.png">
+        </div>
+    </div>
 
     <div id="products">
         <div class="product">
             <h3>Apple</h3>
-            <img src="../img/apple.png">
+            <img src="../img/vape.jpg">
             <p>Price: $0.99</p>
             <button onclick="addToCart('Apple', 0.99)">Add to Cart</button>
         </div>
         <div class="product">
             <h3>Banana</h3>
+            <img src="../img/vape.jpg">
             <p>Price: $0.59</p>
             <button onclick="addToCart('Banana', 0.59)">Add to Cart</button>
         </div>
         <div class="product">
             <h3>Bottled Water</h3>
+            <img src="../img/vape.jpg">
             <p>Price: $1.49</p>
             <button onclick="addToCart('Bottled Water', 1.49)">Add to Cart</button>
         </div>
         <div class="product">
             <h3>Orange Juice</h3>
+            <img src="../img/vape.jpg">
             <p>Price: $2.99</p>
             <button onclick="addToCart('Orange Juice', 2.99)">Add to Cart</button>
         </div>
         <div class="product">
             <h3>Sandwich</h3>
+            <img src="../img/vape.jpg">
             <p>Price: $3.99</p>
             <button onclick="addToCart('Sandwich', 3.99)">Add to Cart</button>
         </div>
         <div class="product">
             <h3>Cookies</h3>
+            <img src="../img/vape.jpg">
             <p>Price: $2.49</p>
             <button onclick="addToCart('Cookies', 2.49)">Add to Cart</button>
         </div>
         <div class="product">
             <h3>Chocolate Bar</h3>
+            <img src="../img/vape.jpg">
             <p>Price: $1.29</p>
             <button onclick="addToCart('Chocolate Bar', 1.29)">Add to Cart</button>
         </div>
         <div class="product">
             <h3>Coffee</h3>
+            <img src="../img/vape.jpg">
             <p>Price: $1.99</p>
             <button onclick="addToCart('Coffee', 1.99)">Add to Cart</button>
         </div>
         <div class="product">
             <h3>Tea</h3>
+            <img src="../img/vape.jpg">
             <p>Price: $1.79</p>
             <button onclick="addToCart('Tea', 1.79)">Add to Cart</button>
         </div>
         <div class="product">
             <h3>Magazine</h3>
+            <img src="../img/vape.jpg">
             <p>Price: $4.99</p>
             <button onclick="addToCart('Magazine', 4.99)">Add to Cart</button>
         </div>
@@ -150,6 +228,16 @@
     </div>
 
     <script>
+        // Age verification logic
+        document.getElementById('age-yes').addEventListener('click', function () {
+            document.getElementById('age-overlay').style.display = 'none';
+        });
+
+        document.getElementById('age-no').addEventListener('click', function () {
+            alert('Sorry, you must be at least 19 years old to enter.');
+            window.location.href = 'https://www.google.com'; // redirect if underage
+        });
+        
         // Use your Stripe *publishable* key (test mode is fine here)
         const stripe = Stripe('pk_test_51SYN9gGkkyObvo5M8DQK26nPXXYW63RrJJXPiw2wRPemPjn6e0774N2R2HGR1iFhC6NHls7pmr1ZzrBbAHkfYv9u00XeCfg4F1');
 
